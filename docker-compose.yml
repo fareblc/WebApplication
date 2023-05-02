@@ -4,6 +4,8 @@ services:
   webapplication:
     image: ${DOCKER_REGISTRY-}webapplication
     profiles: [web]
+    depends_on:
+        - mssql
     build:
       context: .
       dockerfile: WebApplication/Dockerfile

@@ -5,6 +5,7 @@ using Swashbuckle.AspNetCore.Filters;
 using WebApplication.Services.ItemService;
 using WebApplication.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 
 var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddEndpointsApiExplorer();
 // Adding Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddDbContext<WebApplication.DataAccessLayer.WebApplicationContext>(context =>
+    context.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -57,7 +60,23 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
+
+static void UpdateDatabase(IApplicationBuilder app)
+{
+    using var serviceScope = app.ApplicationServices
+        .GetRequiredService<IServiceScopeFactory>()
+        .CreateScope();
+
+    using var context = serviceScope.ServiceProvider.GetService<WebApplication.DataAccessLayer.WebApplicationContext>();
+
+    context.Database.Migrate();
+}
+
+UpdateDatabase(app);
+
+
 
 app.UseCors("NgOrigins");
 
