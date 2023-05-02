@@ -4,8 +4,12 @@ services:
   webapplication:
     image: ${DOCKER_REGISTRY-}webapplication
     profiles: [web]
+    ports:
+        - 55000:80
+        - 55001:443
     depends_on:
         - mssql
+    command: ["dotnet", "ef", "database update"]
     build:
       context: .
       dockerfile: WebApplication/Dockerfile

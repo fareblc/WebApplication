@@ -6,6 +6,7 @@ using WebApplication.Services.ItemService;
 using WebApplication.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using WebApplication.Services.AuthService;
 
 var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Adding Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 builder.Services.AddDbContext<WebApplication.DataAccessLayer.WebApplicationContext>(context =>
     context.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
 builder.Services.AddHttpContextAccessor();

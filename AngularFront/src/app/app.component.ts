@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { Item } from './models/item';
 import { User } from './models/user';
 import { AuthService } from './services/auth.service';
 
@@ -29,6 +30,12 @@ export class AppComponent {
   getMe() {
     this.authService.getMe().subscribe((name: string) => {
       console.log(name);
+    });
+  }
+
+  getItems() {
+    this.authService.getItems().subscribe((items: Array<Item>) => {
+      console.log(items);
     });
   }
 }
